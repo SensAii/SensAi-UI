@@ -1,0 +1,7 @@
+<div class="loader-overlay" *ngIf="loaderService.isLoading$ | async">
+    <video autoplay loop muted class="loader-video">
+      <source src="assets/loader.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+  </div>
+  

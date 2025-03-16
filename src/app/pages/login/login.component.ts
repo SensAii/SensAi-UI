@@ -1,4 +1,4 @@
-import { AfterViewInit, Component } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -30,7 +30,7 @@ import { environment } from '../../../environments/environment';
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 
-export class LoginComponent implements AfterViewInit {
+export class LoginComponent implements AfterViewInit, OnInit {
   constructor(private http: HttpClient, private router: Router) {}
 
   ngAfterViewInit() {
@@ -42,6 +42,21 @@ export class LoginComponent implements AfterViewInit {
         { image: 'assets/slide3.png', caption: 'Slide 3' }
       ];
     }, 100);
+  }
+  ngOnInit(): void {
+    this.checkAuth();
+  }
+
+  checkAuth() {
+    this.http.get(`${environment.apiBaseUrl}/api/user/auth`, { withCredentials: true }).subscribe(
+      (user: any) => {
+        console.log('Already logged in:', user);
+        this.router.navigate(['/dashboard']); // Redirect to dashboard
+      },
+      (error) => {
+        console.log('Not logged in:', error);
+      }
+    );
   }
 
   email = '';

@@ -1,0 +1,34 @@
+<div class="sidebar" [class.collapsed]="isCollapsed">
+    <button class="toggle-btn" (click)="toggleSidebar()">
+      <span *ngIf="isCollapsed">☰</span>
+      <span *ngIf="!isCollapsed">✖</span>
+    </button>
+  
+    <ul class="menu">
+      <li>
+        <a routerLink="/dashboard" routerLinkActive="active">
+          <i class="icon fas fa-home"></i>
+          <span *ngIf="!isCollapsed">Dashboard</span>
+        </a>
+      </li>
+      <li>
+        <a routerLink="/profile" routerLinkActive="active">
+          <i class="icon fas fa-user"></i>
+          <span *ngIf="!isCollapsed">Profile</span>
+        </a>
+      </li>
+      <li>
+        <a routerLink="/settings" routerLinkActive="active">
+          <i class="icon fas fa-cog"></i>
+          <span *ngIf="!isCollapsed">Settings</span>
+        </a>
+      </li>
+      <li>
+        <a routerLink="/logout" routerLinkActive="active">
+          <i class="icon fas fa-sign-out-alt"></i>
+          <span *ngIf="!isCollapsed">Logout</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+  

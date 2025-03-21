@@ -2,6 +2,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LoaderService } from '../../services/loader.service';
+import { AuthService } from '../../core/auth/auth.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -82,11 +83,13 @@ import { LoaderService } from '../../services/loader.service';
 })
 export class DashboardComponent implements OnInit {
   dashboardData: any = null;
-  
-  constructor(private loaderService: LoaderService) {}
+  user: any = null;
+  constructor(private loaderService: LoaderService, private authService : AuthService) {}
   
   ngOnInit() {
     this.loadDashboardData();
+    this.user = this.authService.getUser();
+    console.log(this.user);
   }
   
   loadDashboardData() {

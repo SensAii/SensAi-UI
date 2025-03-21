@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, NavigationEnd, RouterModule } from '@angular/router';
 import { filter } from 'rxjs/operators';
@@ -9,6 +9,7 @@ import { MatBadgeModule } from '@angular/material/badge';
 import { MatDividerModule } from '@angular/material/divider';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
+import { AuthService } from '../../core/auth/auth.service';
 
 interface Notification {
   id: number;
@@ -32,7 +33,7 @@ interface Notification {
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.scss']
 })
-export class NavbarComponent {
+export class NavbarComponent implements OnInit {
   @Input() isSidebarExpanded = true;
   @Output() toggleSidebarEvent = new EventEmitter<void>();
   
@@ -60,7 +61,7 @@ export class NavbarComponent {
     return this.notifications.filter(notification => !notification.read).length;
   }
   
-  constructor(private router: Router, private http: HttpClient) {
+  constructor(private router: Router, private http: HttpClient, private authService: AuthService) {
     // Subscribe to route changes to update page title
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
@@ -70,6 +71,14 @@ export class NavbarComponent {
       this.currentPageTitle = this.formatPageTitle(url);
     });
   }
+
+  ngOnInit() {
+    const user = this.authService.getUser();
+    if (user) {
+      this.userName = user.name || "Student"; ;
+      this.userEmail = user.email;
+    }
+}
   
   formatPageTitle(url: string): string {
     // Convert URL path to readable title (e.g., 'study-plans' -> 'Study Plans')

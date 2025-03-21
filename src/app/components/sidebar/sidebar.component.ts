@@ -50,12 +50,10 @@ export class SidebarComponent {
   // Dynamic modules array - easily add or remove modules here
   modules: SidebarModule[] = [
     { id: 'dashboard', name: 'Dashboard', icon: 'dashboard', route: '/dashboard' },
-    { id: 'study-plans', name: 'Study Plans', icon: 'calendar_today', route: '/study-plans' },
-    { id: 'sessions', name: 'Study Sessions', icon: 'timer', route: '/sessions' },
     { id: 'materials', name: 'Materials', icon: 'menu_book', route: '/materials' },
+    { id: 'sessions', name: 'Study Sessions', icon: 'timer', route: '/sessions' },
     { id: 'flashcards', name: 'Flashcards', icon: 'style', route: '/flashcards' },
     { id: 'quizzes', name: 'Quizzes', icon: 'quiz', route: '/quizzes' },
-    { id: 'analytics', name: 'Analytics', icon: 'insights', route: '/analytics' },
     { id: 'settings', name: 'Settings', icon: 'settings', route: '/settings' }
   ];
 

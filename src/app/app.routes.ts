@@ -6,7 +6,9 @@ import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { AuthGuard } from './services/authguard.service';
 import { LayoutComponent } from './components/layout/layout.component';
 import { OnboardingComponent } from './pages/onboarding/onboarding.component';
-import { OnboardingGuard } from './services/onboardingguard.service'; // Note: corrected typo from 'onboardingguard.service'
+import { OnboardingGuard } from './services/onboardingguard.service';
+import { MaterialsComponent } from './pages/materials/materials.component';
+import { MaterialViewComponent } from './pages/materials/material-view/material-view.component';
 
 export const routes: Routes = [
     { path: '', component: LandingComponent },
@@ -19,6 +21,7 @@ export const routes: Routes = [
         children: [
             { path: 'dashboard', component: DashboardComponent },
             { path: 'materials', component: MaterialsComponent },
+            { path: 'material-view/:id', component: MaterialViewComponent },
             { path: '**', redirectTo: 'dashboard' }
         ]
     },

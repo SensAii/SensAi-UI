@@ -20,4 +20,8 @@ export class LoaderService {
   hide(): void {
     this.loadingSubject.next(false);
   }
+
+  isLoading(): boolean {
+    return this.loadingSubject.getValue(); // Returns true if loading is in progress
+  }
 }

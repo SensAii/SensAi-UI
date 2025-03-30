@@ -21,7 +21,7 @@ export const routes: Routes = [
         children: [
             { path: 'dashboard', component: DashboardComponent },
             { path: 'materials', component: MaterialsComponent },
-            { path: 'material-view/:id', component: MaterialViewComponent },
+            { path: 'material-view/:id/:fileName', component: MaterialViewComponent },
             { path: '**', redirectTo: 'dashboard' }
         ]
     },

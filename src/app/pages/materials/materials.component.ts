@@ -5,9 +5,9 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
 import { AuthService } from '../../core/auth/auth.service';
@@ -23,8 +23,8 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
     MatCardModule,
     MatButtonModule,
     MatIconModule,
-    MatProgressSpinnerModule,
     MatSnackBarModule,
+    MatProgressSpinnerModule,
     MatDialogModule
   ],
   templateUrl: './materials.component.html',
@@ -46,10 +46,9 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
 export class MaterialsComponent implements OnInit {
   uploadedMaterials: any[] = [];
   fallbackImage1: string = 'assets/PDF File.gif';
-
+  isLoading: boolean = false;
   constructor(
     private http: HttpClient,
-    private authService: AuthService,
     private snackBar: MatSnackBar,
     private router: Router,
     private dialog: MatDialog
@@ -73,13 +72,16 @@ export class MaterialsComponent implements OnInit {
   }
 
   loadMaterials() {
+    this.isLoading=true;
     this.http.get(`${environment.apiBaseUrl}/api/materials`, {
       withCredentials: true
     }).subscribe({
       next: (response: any) => {
+        this.isLoading=false;
         this.uploadedMaterials = response.materials;
       },
       error: (error) => {
+        this.isLoading=false;
         console.error('Failed to load materials:', error);
         this.snackBar.open('Failed to load materials', 'Close', {
           duration: 3000,
@@ -89,8 +91,29 @@ export class MaterialsComponent implements OnInit {
     });
   }
 
-  viewMaterial(materialId: number) {
-    this.router.navigate(['/material-view', materialId]);
+  viewMaterial(material: any) {
+    this.router.navigate(['/material-view', material.id, this.formatRedirectUrl(material.file_name)]);
+  }
+
+  formatRedirectUrl(filename: string): string {
+    // Step 1: Decode URL-encoded characters (e.g., %20 -> space)
+    let cleanedString = decodeURIComponent(filename);
+  
+    // Step 2: Remove file extensions (e.g., .pdf, .docx) and trailing numbers in parentheses (e.g., (1))
+    cleanedString = cleanedString.replace(/\.(pdf|docx|txt)(\s*\(\d+\))?$/i, '');
+  
+    // Step 3: Remove all dots (.) from the string
+    cleanedString = cleanedString.replace(/\./g, '');
+  
+    // Step 4: Split by hyphens or spaces, filter out empty segments
+    const words = cleanedString
+      .split(/[- ]+/)
+      .filter(word => word.length > 0);
+  
+    // Step 5: Join with hyphens and convert to lowercase for a clean redirect URL
+    return words
+      .map(word => word.toLowerCase())
+      .join('-');
   }
 
   getPreviewUrl(material: any): string {

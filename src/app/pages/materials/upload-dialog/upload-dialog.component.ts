@@ -10,6 +10,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { environment } from '../../../../environments/environment';
 import { AuthService } from '../../../core/auth/auth.service';
 import { trigger, transition, style, animate } from '@angular/animations';
+import { LoaderService } from '../../../services/loader.service';
 
 @Component({
   selector: 'app-upload-dialog',
@@ -40,9 +41,9 @@ export class UploadDialogComponent {
 
   constructor(
     private http: HttpClient,
-    private authService: AuthService,
     private snackBar: MatSnackBar,
-    public dialogRef: MatDialogRef<UploadDialogComponent>
+    public dialogRef: MatDialogRef<UploadDialogComponent>,
+    private loaderService: LoaderService,
   ) {}
 
   onDragOver(event: DragEvent) {
@@ -91,12 +92,15 @@ export class UploadDialogComponent {
   uploadFile(file: File) {
     const formData = new FormData();
     formData.append('file', file);
+    // Show custom loader
+    this.loaderService.show('Uploading file...');
 
     this.http.post(`${environment.apiBaseUrl}/api/materials/upload`, formData, {
       withCredentials: true
     }).subscribe({
       next: (response: any) => {
         this.files = this.files.filter(f => f !== file);
+        this.loaderService.hide();
         this.snackBar.open('File uploaded successfully', 'Close', {
           duration: 2000,
           panelClass: ['success-snackbar']
@@ -109,6 +113,7 @@ export class UploadDialogComponent {
           duration: 3000,
           panelClass: ['error-snackbar']
         });
+        this.loaderService.hide();
         this.files = this.files.filter(f => f !== file);
       }
     });

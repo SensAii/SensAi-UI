@@ -25,7 +25,7 @@
           <p>Drag and drop your PDF/DOC files here</p>
           <p>or</p>
           <label for="fileInput">
-            <button mat-raised-button color="primary">Browse Files</button>
+            <button mat-raised-button color="primary" (click)="fileInput.click()">Browse Files</button>
           </label>
           <input 
             type="file" 
@@ -33,7 +33,7 @@
             #fileInput 
             accept=".pdf,.doc,.docx" 
             (change)="onFileSelected($event)" 
-            multiple 
+            multiple
             hidden
           >
         </div>

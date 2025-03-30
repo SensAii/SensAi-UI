@@ -1,0 +1,40 @@
+<!-- Custom Toolbar -->
+<div class="custom-toolbar">
+  <button 
+    mat-raised-button 
+    color="primary"
+    (click)="savePdf()"
+    matTooltip="Save PDF"
+    matTooltipPosition="below"
+    aria-label="Save PDF"
+    [disabled]="pdfFailed || !pdfUrl || isLoading()"
+    [ngClass]="{ 'disabled-button': pdfFailed || !pdfUrl || isLoading() }"
+    [@fadeIn]>
+    <mat-icon>save</mat-icon>
+    <span class="button-text">Save</span>
+  </button>
+</div>
+
+<!-- PDF Viewer (unchanged) -->
+<ngx-extended-pdf-viewer
+  [src]="pdfUrl"
+  useBrowserLocale="true"
+  [showSidebarButton]="true"
+  [showOpenFileButton]="false"
+  [showHandToolButton]="true"
+  [showFindButton]="false"
+  [showStampEditor]="false"
+  [textLayer]="true"
+  [showBorders]="true"
+  [showSecondaryToolbarButton]="false"
+  [showPresentationModeButton]="true"
+  [handTool]="false"
+  (pdfLoaded)="onPdfLoaded()"
+  (textSelected)="onTextSelected($event)"
+  style="height: calc(90vh - 48px); width: 100%; display: block;"
+  theme="dark"
+  (error)="onError($event)"
+  (pdfLoadingFailed)="onError($event)"
+  [enableDragAndDrop]="false"
+  >
+</ngx-extended-pdf-viewer>

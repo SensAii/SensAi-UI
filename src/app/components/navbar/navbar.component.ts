@@ -80,13 +80,23 @@ export class NavbarComponent implements OnInit {
     }
 }
   
-  formatPageTitle(url: string): string {
-    // Convert URL path to readable title (e.g., 'study-plans' -> 'Study Plans')
-    return url
-      .split('-')
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(' ');
-  }
+formatPageTitle(url: string): string {
+  // Step 1: Decode URL-encoded characters (e.g., %20 -> space)
+  let decodedString = decodeURIComponent(url);
+
+  // Step 2: Remove file extensions (e.g., .pdf, .docx) and any trailing numbers in parentheses (e.g., (1))
+  decodedString = decodedString.replace(/\.(pdf|docx|txt)(\s*\(\d+\))?$/i, '');
+
+  // Step 3: Split by either hyphens or spaces and filter out empty segments
+  const words = decodedString
+    .split(/[- ]+/)
+    .filter(word => word.length > 0);
+
+  // Step 4: Capitalize each word and join with spaces
+  return words
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(' ');
+}
   
   toggleSidebar() {
     this.toggleSidebarEvent.emit();

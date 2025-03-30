@@ -25,14 +25,18 @@
           <p>Type: {{ material.file_type || guessFileType(material.file_name) }}</p>
         </mat-card-content>
         <mat-card-actions>
-          <button mat-icon-button color="primary" (click)="viewMaterial(material.id)" title="View Material">
+          <button mat-icon-button color="primary" (click)="viewMaterial(material)" title="View Material">
             <mat-icon>visibility</mat-icon>
           </button>
         </mat-card-actions>
       </mat-card>
     </div>
   
-    <div class="no-materials" *ngIf="uploadedMaterials.length === 0" [@fadeIn]>
+    <div class="no-materials" *ngIf="uploadedMaterials.length === 0  && !isLoading" [@fadeIn]>
       <p>No materials uploaded yet. Click the + button to add some!</p>
     </div>
+
+    <div *ngIf="isLoading" class="no-materials">
+        <mat-spinner diameter="20"></mat-spinner>
+      </div>
   </div>

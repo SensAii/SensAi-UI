@@ -45,7 +45,6 @@ export class AuthService {
               if (response.isAuthenticated && response.user) {
                   return this.http.get<User>(this.meUrl, { withCredentials: true }).pipe(
                       tap((user: User) => {
-                        console.log(user)
                           this.userSubject.next(user);
                           this.firstTimeLoginSubject.next(!user.onboarding_completed);
                       }),

@@ -9,6 +9,8 @@ import { OnboardingComponent } from './pages/onboarding/onboarding.component';
 import { OnboardingGuard } from './services/onboardingguard.service';
 import { MaterialsComponent } from './pages/materials/materials.component';
 import { MaterialViewComponent } from './pages/materials/material-view/material-view.component';
+import { FlashcardComponent } from './pages/flashcard/flashcard.component';
+import { DebateComponent } from './pages/debate/debate.component';
 
 export const routes: Routes = [
     { path: '', component: LandingComponent },
@@ -22,6 +24,8 @@ export const routes: Routes = [
             { path: 'dashboard', component: DashboardComponent },
             { path: 'materials', component: MaterialsComponent },
             { path: 'material-view/:id/:fileName', component: MaterialViewComponent },
+            { path: 'flashcards', component: FlashcardComponent },
+            { path: 'debate', component: DebateComponent },
             { path: '**', redirectTo: 'dashboard' }
         ]
     },

@@ -4,11 +4,13 @@ import { ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatIconModule } from '@angular/material/icon';
+import { MatDialog } from '@angular/material/dialog';
 import { environment } from '../../../../environments/environment';
 import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
 import { NgxExtendedPdfViewerService } from 'ngx-extended-pdf-viewer';
 import { LoaderService } from '../../../services/loader.service';
 import { pdfDefaultOptions } from 'ngx-extended-pdf-viewer';
+import { FlashcardPreviewComponent } from './flashcard-preview/flashcard-preview.component';
 
 @Component({
   selector: 'app-materials-view',
@@ -22,6 +24,7 @@ export class MaterialViewComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private snackBar = inject(MatSnackBar);
   private pdfService = inject(NgxExtendedPdfViewerService);
+  private dialog = inject(MatDialog);
 
   materialId!: number;
   materials: any
@@ -29,6 +32,7 @@ export class MaterialViewComponent implements OnInit {
   selectedText: string = '';
   highlights: { text: string; color: string }[] = [];
   pdfFailed: boolean = false;
+  generatedFlashcard: any = null;
 
   constructor(private loaderService: LoaderService) {
     pdfDefaultOptions.cursorToolOnLoad = 0; // Set the default cursor tool to "Text Selection"
@@ -39,6 +43,10 @@ export class MaterialViewComponent implements OnInit {
     if (this.materialId) {
       this.loadMaterial();
     }
+    // Listen for text selection inside the PDF viewer
+  document.addEventListener('mouseup', this.captureSelectedText.bind(this));
+  document.addEventListener('keyup', this.captureSelectedText.bind(this)); // For keyboard selection
+
   }
 
   loadMaterial() {
@@ -77,6 +85,7 @@ export class MaterialViewComponent implements OnInit {
   }
 
   onTextSelected(event: any) {
+    console.log('Text selected:', event);
     const selection = window.getSelection();
     if (selection && selection.toString().trim()) {
       this.selectedText = selection.toString();
@@ -115,5 +124,101 @@ async savePdf() {
     }
   });
 }
+
+generateFlashcard() {
+  if (!this.selectedText.trim()) {
+    this.snackBar.open('Please select some text first', 'Close', { duration: 3000 });
+    return;
+  }
+
+  const pageNumber = this.pdfService.getCurrentlyVisiblePageNumbers()[0]; // Get the current PDF page
+  const contextText = this.getContextText(); // Get the surrounding context text
+
+  this.loaderService.show('Generating flashcard...');
+  this.http.post(`${environment.apiBaseUrl}/api/flashcards`, {
+    materialId: this.materialId,
+    selectedText: this.selectedText,
+    pageNumber: pageNumber,
+    contextText: contextText
+  }, { withCredentials: true }).subscribe({
+    next: (response: any) => {
+      this.loaderService.hide();
+      this.snackBar.open('Flashcard Created!', 'Close', { duration: 3000, panelClass: ['success-snackbar'] });
+      console.log('Flashcard:', response.flashcard);
+      response.flashcard.back_content = this.formatBackContent(response.flashcard.back_content); // Format back content
+      this.dialog.open(FlashcardPreviewComponent, {
+        width: '600px',
+        data: response.flashcard
+      });
+      
+      this.selectedText = '';
+    },
+    error: (error) => {
+      this.loaderService.hide();
+      this.snackBar.open('Failed to generate flashcard', 'Close', { duration: 3000, panelClass: ['error-snackbar'] });
+      console.error('Flashcard creation error:', error);
+    }
+  });
+}
+
+captureSelectedText() {
+  const selection = window.getSelection();
+  if (selection && selection.toString().trim().length > 0) {
+    this.selectedText = selection.toString().trim();
+    console.log('Text Selected:', this.selectedText);
+  }
+}
+
+ formatBackContent(back_content: string) {
+  // Remove leading/trailing whitespace
+  let formatted = back_content.trim();  
+
+  // Remove any unnecessary prefixes
+  formatted = formatted.replace(/^(\*\*[^:]+:\*\*)\s*/, "");
+
+  // Replace new lines with `<br>` for HTML formatting
+  formatted = formatted.replace(/\n/g, "");
+
+  return formatted;
+}
+
+
+getContextText(): string {
+  const selection = window.getSelection();
+  if (!selection || selection.rangeCount === 0) {
+    return '';
+  }
+
+  const range = selection.getRangeAt(0);
+  const startContainer = range.startContainer;
+  const endContainer = range.endContainer;
+  const startOffset = range.startOffset;
+  const endOffset = range.endOffset;
+
+  if (!startContainer.textContent || !endContainer.textContent) {
+    return '';
+  }
+
+  const textBefore = startContainer.textContent.substring(0, startOffset).trim();
+  const textAfter = endContainer.textContent.substring(endOffset).trim();
+  
+  const fullContext = this.extractFullContext(textBefore, selection.toString(), textAfter);
+  return fullContext.trim();
+}
+
+extractFullContext(before: string, selected: string, after: string): string {
+
+  // Extract the last full sentence from "before" (ensuring it does not cut off)
+  let beforeSentenceMatch = before.match(/[^.!?]*[.!?]/g);
+  let beforeSentence = beforeSentenceMatch ? beforeSentenceMatch.pop() : before;
+
+  // Extract the first full sentence from "after"
+  let afterSentenceMatch = after.match(/[^.!?]*[.!?]/);
+  let afterSentence = afterSentenceMatch ? afterSentenceMatch[0] : after;
+
+  return `${beforeSentence || ''} ${selected} ${afterSentence || ''}`.trim();
+}
+
+
 }
 

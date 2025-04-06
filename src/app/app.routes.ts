@@ -10,6 +10,7 @@ import { OnboardingGuard } from './services/onboardingguard.service';
 import { MaterialsComponent } from './pages/materials/materials.component';
 import { MaterialViewComponent } from './pages/materials/material-view/material-view.component';
 import { FlashcardComponent } from './pages/flashcard/flashcard.component';
+import { PdfPodcastComponent } from './pages/pdf-podcast/pdf-podcast.component';
 
 export const routes: Routes = [
     { path: '', component: LandingComponent },
@@ -24,6 +25,7 @@ export const routes: Routes = [
             { path: 'materials', component: MaterialsComponent },
             { path: 'material-view/:id/:fileName', component: MaterialViewComponent },
             { path: 'flashcards', component: FlashcardComponent },
+            { path: 'pdf-to-podcast', component: PdfPodcastComponent },
             { path: '**', redirectTo: 'dashboard' }
         ]
     },

@@ -51,15 +51,15 @@ export class SidebarComponent {
   modules: SidebarModule[] = [
     { id: 'dashboard', name: 'Dashboard', icon: 'dashboard', route: '/dashboard' },
     { id: 'materials', name: 'Materials', icon: 'menu_book', route: '/materials' },
-    { id: 'sessions', name: 'Study Sessions', icon: 'timer', route: '/sessions' },
+    // { id: 'sessions', name: 'Study Sessions', icon: 'timer', route: '/sessions' },
     { id: 'flashcards', name: 'Flashcards', icon: 'style', route: '/flashcards' },
     { id: 'quizzes', name: 'Quizzes', icon: 'quiz', route: '/quizzes' },
     { id: 'pdf-to-podcast', name: 'PDF to Podcast', icon: 'podcasts', route: '/pdf-to-podcast' },
-    { id: 'study-planner', name: 'Study Planner', icon: 'calendar_today', route: '/study-planner' },
+    // { id: 'study-planner', name: 'Study Planner', icon: 'calendar_today', route: '/study-planner' },
     // { id: 'debate', name: 'Debate', icon: 'record_voice_over', route: '/debate' },
-    { id: 'badges', name: 'Badges', icon: 'stars', route: '/badges' },
-    { id: 'leaderboard', name: 'Leaderboard', icon: 'leaderboard', route: '/leaderboard' },
-    { id: 'settings', name: 'Settings', icon: 'settings', route: '/settings' }
+    // { id: 'badges', name: 'Badges', icon: 'stars', route: '/badges' },
+    // { id: 'leaderboard', name: 'Leaderboard', icon: 'leaderboard', route: '/leaderboard' },
+    // { id: 'settings', name: 'Settings', icon: 'settings', route: '/settings' }
 ];
 
   toggle() {

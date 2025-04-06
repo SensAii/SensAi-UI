@@ -79,7 +79,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
     /* Flashcard */
     .flashcard {
       position: relative;
-      width: 340px;
+      width: 550px;
       height: 260px;
       transform-style: preserve-3d;
       transition: transform 0.6s ease-in-out;

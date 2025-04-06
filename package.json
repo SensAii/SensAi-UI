@@ -25,6 +25,7 @@
     "bootstrap": "^5.3.3",
     "html2canvas": "^1.4.1",
     "jquery": "^3.7.1",
+    "mathjs": "^14.4.0",
     "ngx-extended-pdf-viewer": "^23.0.0-alpha.6",
     "ngx-owl-carousel-o": "^19.0.0",
     "ngx-slick-carousel": "^19.0.0",

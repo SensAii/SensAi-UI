@@ -1,7 +1,7 @@
 <div class="sidebar" [@sidebarState]="isExpanded ? 'expanded' : 'collapsed'">
   <div class="logo-container">
-    <img src="assets/FocusLearnLogo-removebg-preview.png" alt="FocusLearn Logo" class="logo" *ngIf="isExpanded">
-    <img src="assets/FocusLearnLogo-removebg-preview.png" alt="FocusLearn Icon" class="logo-icon" *ngIf="!isExpanded">
+    <h1 class="app-name-1" *ngIf="isExpanded">Focus<span class="app-name-2">Learn</span></h1>
+    <img src="assets/light-blue-logo-focus-learn.png" alt="FocusLearn Icon" class="logo-icon" *ngIf="!isExpanded">
   </div>
   
   <div class="modules-container">

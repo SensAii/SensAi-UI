@@ -67,11 +67,22 @@ export class UploadDialogComponent {
 
   onFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;
-    if (input.files) {
+  if (input.files) {
+    const maxSize = 20 * 1024 * 1024; // 20MB in bytes
+    const files = Array.from(input.files);
+
+    const validFiles = files.filter(file => file.size <= maxSize);
+    const invalidFiles = files.filter(file => file.size > maxSize);
+
+    if (invalidFiles.length > 0) {
+      alert("Some files exceed 20MB and were not selected.");
+    } else {
       this.handleFiles(input.files);
       input.value = ''; // Reset input to allow re-uploading same file
     }
+    console.log("Valid files:", validFiles);
   }
+}
 
   private handleFiles(fileList: FileList) {
     const allowedTypes = ['application/pdf'];
